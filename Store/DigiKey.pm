@@ -9,7 +9,9 @@ package Store::DigiKey;
 use strict;
 use warnings;
 
+use IO::Handle;
 use File::Slurp;
+use Data::Dumper;
 
 # Constructor.
 sub new {
@@ -22,9 +24,19 @@ sub new {
 	return $self;
 }
 
-sub print {
-	my ($self) = @_;
-	print "The file is: " . File::Slurp::read_file($self->{file}) . "\n";
+sub parse_csv {
+	my ($self) = @_;  # Gets the class context.
+	open(my $data, "<", $self->{file_name}) or die "Couldn't open file \"$self->{file}\": $!";
+
+	while (my $line = readline($data)) {
+		chomp $line;
+
+		if ($data->input_line_number() == 2) {
+			# IDs line.
+			my ($web_id, $access_id, $salesorder) = split(/,/, $line);
+			print "Some IDs: $web_id - $access_id - $salesorder";
+		}
+	}
 }
 
 1;
