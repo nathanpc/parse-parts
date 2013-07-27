@@ -28,16 +28,12 @@ sub new {
 sub parse_fields {
 	my ($line) = @_;
 
-	# Escape the commas in the price field. (Since DigiKey doesn't do it and provide us badly formatted CSVs)
-	# TODO: Create a regex that matches if there's a "," between "$" and ".", then escape it.
-
-
 	# Remove the last empty field if it exists.
 	if ($line !~ /,$/) {
 		$line = substr($line, 0, length($line) - 1);
 	}
 
-	# Escape any comma that is part of a price.
+	# Escape the commas in the price field. (Since DigiKey doesn't do it and provide us badly formatted CSVs)
 	if ($line =~ /\$[0-9]+,[0-9]+\.[0-9]+/) {
 		my $subs = substr($line, $-[0], $+[0]);
 		$subs =~ s/,/\\,/g;
@@ -67,6 +63,7 @@ sub parse {
 			next;
 		}
 
+		# Parse specific lines.
 		if ($data->input_line_number() == 2) {
 			# IDs line.
 			my ($web_id, $access_id, $salesorder) = parse_fields($line);
