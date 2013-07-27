@@ -1,10 +1,16 @@
 #!/usr/bin/perl -w
 
-#######################################################################
-# File:   parse-parts.pl
-# Author: Nathan Campos <nathanpc@dreamintech.net>
+# parse-parts.pl
 #
 # A program to help you organize and keep track of all the electronics
 # parts you've ordered.
-#######################################################################
 
+use strict;
+use Data::Dumper;
+
+# Import stores.
+use Store::DigiKey;
+
+my $st = new Store::DigiKey("examples/digikey.csv");
+$st->print();
+print Dumper($st);
