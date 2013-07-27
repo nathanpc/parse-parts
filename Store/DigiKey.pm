@@ -45,8 +45,12 @@ sub parse_fields {
 		$line =~ s/\$[0-9]+,[0-9]+\.[0-9]+/$subs/g;
 	}
 
-	# Split and return.
+	# Split and unescape.
 	my @fields = split(/(?<!\\),/, $line);
+	for (@fields) {
+		s/\\,/,/g;
+	}
+
 	return @fields;
 }
 
