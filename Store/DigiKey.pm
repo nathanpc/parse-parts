@@ -54,8 +54,7 @@ sub parse {
 			my @col = parse_fields($line);
 			print "Collumns: ", join(" - ", @col), "\n";
 		} elsif ($data->input_line_number() > 12) {
-			my @part = split(/,/, $line);
-			if (looks_like_number($part[0])) {
+			if (looks_like_number((split(/,/, $line))[0])) {
 				# Part.
 				my @part = parse_fields($line);
 				print "Part: ", join(" - ", @part), "\n";
