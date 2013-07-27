@@ -31,9 +31,18 @@ sub parse_fields {
 	# Escape the commas in the price field. (Since DigiKey doesn't do it and provide us badly formatted CSVs)
 	# TODO: Create a regex that matches if there's a "," between "$" and ".", then escape it.
 
-	my @fields = split(/,/, $line);
-	pop(@fields);  # Remove the last, empty, field.
+	# TODO: Match if there's any $,. then replace the , with a \,
+	if ($line =~ /\$[0-9]+,[0-9]+\.[0-9]+/) {
+		print "\n\n", index($line, /\$[0-9]+,[0-9]+\.[0-9]+/), "\n\n";
+	}
 
+	# Remove the last empty field if it exists.
+	if ($line !~ /,$/) {
+		$line = substr($line, 0, length($line) - 1);
+	}
+
+	# Split and return.
+	my @fields = split(/,/, $line);
 	return @fields;
 }
 
