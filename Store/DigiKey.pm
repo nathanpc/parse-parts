@@ -13,6 +13,8 @@ use IO::Handle qw(input_line_number);
 use Scalar::Util qw(looks_like_number);
 use Data::Dumper;
 
+use DatabaseHelper::DigiKey;
+
 # Constructor.
 sub new {
 	my ($class) = @_;
@@ -53,6 +55,7 @@ sub parse_fields {
 # Parse the whole file.
 sub parse {
 	my ($self) = @_;  # Gets the class context.
+	my $db = new DatabaseHelper::DigiKey();
 	open(my $data, "<", $self->{file_name}) or die "Couldn't open file \"$self->{file}\": $!";
 
 	while (my $line = readline($data)) {
@@ -67,7 +70,12 @@ sub parse {
 		if ($data->input_line_number() == 2) {
 			# IDs line.
 			my ($web_id, $access_id, $salesorder) = parse_fields($line);
-			print "Some IDs: $web_id - $access_id - $salesorder\n";
+			$db->add_order($web_id, $access_id, $salesorder);
+
+			print "Order added to the database:\n";
+			print "    Web ID: $web_id\n";
+			print "    Access ID: $access_id\n";
+			print "    Salesorder: $salesorder\n\n";
 		} elsif ($data->input_line_number() == 12) {
 			# Parts collumn definition line.
 			my @col = parse_fields($line);
@@ -85,6 +93,8 @@ sub parse {
 			}
 		}
 	}
+
+	$db->close();
 }
 
 1;
