@@ -56,6 +56,7 @@ sub parse_fields {
 sub parse {
 	my ($self) = @_;  # Gets the class context.
 	my $db = new DatabaseHelper::DigiKey();
+	my $salesorder;
 	open(my $data, "<", $self->{file_name}) or die "Couldn't open file \"$self->{file}\": $!";
 
 	while (my $line = readline($data)) {
@@ -69,13 +70,14 @@ sub parse {
 		# Parse specific lines.
 		if ($data->input_line_number() == 2) {
 			# IDs line.
-			my ($web_id, $access_id, $salesorder) = parse_fields($line);
-			$db->add_order($web_id, $access_id, $salesorder);
+			my ($web_id, $access_id, $_salesorder) = parse_fields($line);
+			$salesorder = $_salesorder;
+			$db->add_order($web_id, $access_id, $_salesorder);
 
 			print "Order added to the database:\n";
 			print "    Web ID: $web_id\n";
 			print "    Access ID: $access_id\n";
-			print "    Salesorder: $salesorder\n\n";
+			print "    Salesorder: $_salesorder\n\n";
 		} elsif ($data->input_line_number() == 12) {
 			# Parts collumn definition line.
 			my @col = parse_fields($line);

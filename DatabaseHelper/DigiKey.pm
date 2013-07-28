@@ -11,6 +11,7 @@ use warnings;
 
 use DBI;
 use Data::Dumper;
+use Term::ANSIColor;
 
 # Constructor.
 sub new {
@@ -37,7 +38,15 @@ sub new {
 sub add_order {
 	my ($self, $web_id, $access_id, $salesorder) = @_;
 
-	$self->{store_db}->do("INSERT INTO Orders VALUES(NULL, '$web_id', '$access_id', '$salesorder')");
+	# Check if the salesorder already exists.
+	my $sth = $self->{store_db}->prepare("SELECT salesorder FROM Orders WHERE salesorder = '$salesorder 22'");
+	$sth->execute();
+
+	if (!defined $sth->fetchrow_arrayref()) {
+		print colored("Warning: ", "yellow"), "Salesorder already exist in the database.\n\n";
+	} else {
+		$self->{store_db}->do("INSERT INTO Orders VALUES(NULL, '$web_id', '$access_id', '$salesorder')");
+	}
 }
 
 # Close all the database connections.
