@@ -39,13 +39,34 @@ sub add_order {
 	my ($self, $web_id, $access_id, $salesorder) = @_;
 
 	# Check if the salesorder already exists.
-	my $sth = $self->{store_db}->prepare("SELECT salesorder FROM Orders WHERE salesorder = '$salesorder 22'");
+	my $sth = $self->{store_db}->prepare("SELECT salesorder FROM Orders WHERE salesorder = '$salesorder'");
 	$sth->execute();
 
-	if (!defined $sth->fetchrow_arrayref()) {
+	if (defined $sth->fetchrow_arrayref()) {
 		print colored("Warning: ", "yellow"), "Salesorder already exist in the database.\n\n";
 	} else {
 		$self->{store_db}->do("INSERT INTO Orders VALUES(NULL, '$web_id', '$access_id', '$salesorder')");
+	}
+}
+
+# Adds parts.
+sub add_part {
+	my ($self, $order_ref, $quantity, $part_ref, $part_name, $description) = @_;
+
+	# TODO: Remember that the "store", "orders" and "part_number" fields are arrays.
+	# TODO: Change the "store" field to a text type.
+
+	# Check if the part already exist in the database.
+	my $sth = $self->{parts_db}->prepare("SELECT store, orders, part_number FROM Parts WHERE part_number LIKE '%$part_ref%'");
+	$sth->execute();
+
+	if (defined $sth->fetchrow_arrayref()) {
+		# Update a part in the database.
+		print colored("Updated: ", "blue"), "$description\n";
+	} else {
+		# Insert a new part in th database.
+		print colored("Added: ", "green"), "$description\n";
+		$self->{parts_db}->do("INSERT INTO Parts VALUES(NULL, 'DigiKey', '$order_ref', $quantity, '$part_ref', '$part_name', '$description')");
 	}
 }
 
