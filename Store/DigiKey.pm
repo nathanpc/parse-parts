@@ -81,7 +81,7 @@ sub parse {
 		} elsif ($data->input_line_number() == 12) {
 			# Parts collumn definition line.
 			my @col = parse_fields($line);
-			print "Collumns: ", join(" - ", @col), "\n\n";
+			#print "Collumns: ", join(" - ", @col), "\n\n";
 		} elsif ($data->input_line_number() > 12) {
 			if (looks_like_number((split(/,/, $line))[0])) {
 				# Part.
