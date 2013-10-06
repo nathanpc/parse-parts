@@ -6,6 +6,7 @@
 # parts you've ordered.
 
 use strict;
+use warnings;
 use Data::Dumper;
 
 # Import stores.

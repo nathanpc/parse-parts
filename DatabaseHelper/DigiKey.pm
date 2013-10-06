@@ -53,9 +53,6 @@ sub add_order {
 sub add_part {
 	my ($self, $order_ref, $quantity, $part_ref, $part_name, $description) = @_;
 
-	# TODO: Remember that the "store", "orders" and "part_number" fields are arrays.
-	# TODO: Change the "store" field to a text type.
-
 	# Check if the part already exist in the database.
 	my $sth = $self->{parts_db}->prepare("SELECT store, orders, part_number FROM Parts WHERE part_number LIKE '%$part_ref%'");
 	$sth->execute();
@@ -63,6 +60,9 @@ sub add_part {
 	if (defined $sth->fetchrow_arrayref()) {
 		# Update a part in the database.
 		print colored("Updated: ", "blue"), "$description\n";
+
+		# TODO: Remember that the "store", "orders" and "part_number" fields are arrays.
+		# TODO: Change the "store" field to a text type.
 	} else {
 		# Insert a new part in th database.
 		print colored("Added: ", "green"), "$description\n";
