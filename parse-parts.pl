@@ -12,6 +12,6 @@ use Data::Dumper;
 # Import stores.
 use Store::DigiKey;
 
-my $order = new Store::DigiKey("examples/digikey.csv");
+my $order = new Store::DigiKey($ARGV[0]);#"examples/digikey.csv");
 $order->parse();
 #print Dumper($order);
